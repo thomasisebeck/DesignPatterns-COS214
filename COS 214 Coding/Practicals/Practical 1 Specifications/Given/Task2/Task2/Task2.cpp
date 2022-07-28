@@ -4,8 +4,8 @@ using namespace std;
 //abstract class
 class ClassA {
 	public:  
-		ClassA() { cout << "ClassA's Empty Constructor is Called" << endl; }
-		virtual ~ClassA() { cout << "ClassA's Destructor is Called" << endl; }
+		ClassA() { cout << "ClassA's Empty Constructor Called" << endl; }
+		virtual ~ClassA() { cout << "ClassA's Destructor Called" << endl; }
 		virtual void print() = 0; 
 };
 
