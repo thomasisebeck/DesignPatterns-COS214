@@ -1,0 +1,11 @@
+URL: https://stackoverflow.com/questions/67976160/how-to-generate-cmakelists-txt-in-clion-when-i-create-project-from-existing-sour
+
+Here are the steps that helped me:
+
+1) (Optional) If you have a CMakeLists.txt file in your project already, but it's incomplete, delete it first.
+
+2) Click on Tools > CMake > Unload CMake Project.
+
+3) Open a source file, and you will be presented with the option of selecting a new CMakeLists.txt file or creating a new one.
+   Select create new. You will be presented with a list of files in your project which you can select/deselect for inclusion.
+
