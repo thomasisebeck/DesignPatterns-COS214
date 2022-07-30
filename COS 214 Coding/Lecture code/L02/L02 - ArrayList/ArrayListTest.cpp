@@ -15,8 +15,7 @@ int main(){
 	asc->insertElement(5);
 	
 	asc->print();
-	
-	asc->sort();
+		asc->sort();
 	
 	asc->print();
 
