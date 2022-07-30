@@ -1,0 +1,3 @@
+D:/COS214/COS 214 Coding/Lecture code/Test/cmake-build-debug/CMakeFiles/Test.dir
+D:/COS214/COS 214 Coding/Lecture code/Test/cmake-build-debug/CMakeFiles/edit_cache.dir
+D:/COS214/COS 214 Coding/Lecture code/Test/cmake-build-debug/CMakeFiles/rebuild_cache.dir
