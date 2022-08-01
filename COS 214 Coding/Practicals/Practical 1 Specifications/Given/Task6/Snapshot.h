@@ -11,12 +11,11 @@ private:
     std::string _password;
     std::string _date;
 public:
-    Snapshot(){};
+    Snapshot()= default;; //To initialise an array of snapshots
     Snapshot(std::string un, std::string pw);
     virtual std::string GetUsername() const;
     virtual std::string date() const;
     virtual std::string state() const;
-
 };
 
 #endif

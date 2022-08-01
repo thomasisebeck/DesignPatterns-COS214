@@ -2,7 +2,7 @@
 #include <ctime>
 #include <cstring>
 
-Snapshot::Snapshot(std::string un, std::string pw){
+Snapshot::Snapshot(std::string un, std::string pw) {
     _username = un;
     _password = pw;
     _date = this->date();
@@ -16,14 +16,13 @@ std::string Snapshot::state() const {
     return _password;
 }
 
-std::string Snapshot::date() const {
-
+std::string Snapshot::date() const
+{
     time_t curr;
     tm* curr_tm;
     char retTime[50];
     char retDate[50];
     char ret[100];
-
 
     time(&curr);
     curr_tm = localtime(&curr);
@@ -36,5 +35,4 @@ std::string Snapshot::date() const {
     strcat(ret, retTime);
 
     return ret;
-
 }
