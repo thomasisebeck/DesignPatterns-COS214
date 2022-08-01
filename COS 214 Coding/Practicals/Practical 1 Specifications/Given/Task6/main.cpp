@@ -5,15 +5,20 @@
 void Run();
 
 int main() {
-  std::srand(static_cast<unsigned int>(time(NULL)));
-  Run();
-  return 0;
+
+    std::srand(static_cast<unsigned int>(time(NULL)));
+
+    Run();
+
+    return 0;
+
+
 }
 
 void Run() {
   User *user = new User("username", "mysecretpassword");
   UserManager *userManager = new UserManager(user);
-  userManager->Backup();
+ /* userManager->Backup();
   user->SetPassword("pa$$w0rd");
   userManager->Backup();
   user->SetPassword("5t@rw@r5");
@@ -24,9 +29,9 @@ void Run() {
   std::cout << "\nClient: Now, let's rollback!\n\n";
   userManager->Undo();
   std::cout << "\nClient: Once more!\n\n";
-  userManager->Undo();
+  userManager->Undo();*/
 
   delete user;
-  delete userManager;
+  //delete userManager;
 }
 
