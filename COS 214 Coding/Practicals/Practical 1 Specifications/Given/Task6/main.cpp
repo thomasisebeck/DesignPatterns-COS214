@@ -1,4 +1,5 @@
 #include <iostream>
+using namespace std;
 #include "UserManager.h"
 #include "User.h"
 
@@ -6,32 +7,34 @@ void Run();
 
 int main() {
 
-    std::srand(static_cast<unsigned int>(time(NULL)));
-
+    srand(static_cast<unsigned int>(time(nullptr)));
     Run();
 
     return 0;
-
-
 }
 
 void Run() {
+
   User *user = new User("username", "mysecretpassword");
-  UserManager *userManager = new UserManager(user);
- /* userManager->Backup();
+  UserManager* userManager = new UserManager(user);
+  userManager->Backup();
   user->SetPassword("pa$$w0rd");
   userManager->Backup();
   user->SetPassword("5t@rw@r5");
   userManager->Backup();
-  user->SetPassword("bigB@ng");
-  std::cout << "\n";
   userManager->ShowHistory();
-  std::cout << "\nClient: Now, let's rollback!\n\n";
+
+  user->SetPassword("bigB@ng");
+  cout << endl;
+  userManager->ShowHistory();
+  cout << endl << "Client: Now, let's rollback!" << endl;
   userManager->Undo();
-  std::cout << "\nClient: Once more!\n\n";
-  userManager->Undo();*/
+  cout << "Client: Once more!" << endl;
+  userManager->Undo();
+  userManager->Undo();
 
   delete user;
-  //delete userManager;
+  delete userManager;
+
 }
 

@@ -1,4 +1,5 @@
 #include "User.h"
+#include "Snapshot.h"
 #include <iostream>
 #include <string>
 using namespace std;
@@ -22,23 +23,32 @@ User::User(string username, string password)  : _username(username), _password(p
     cout << "User: I have been initialized with username " << this->_username << " and a password of " << this->_password << "\n";
 }
 
+void User::SetPassword(std::string pw) {
+    this->_password = pw;
+}
+
 void User::SetPassword() {
     cout << "User: Setting a new secure password.\n";
     // TODO : Implement
 
-
+    this->_password = GenerateRandomString();
 
     cout << "User: My password has been changed to: " << this->_password << "\n";
 }
 
-AuditableSnapshot* User::Save() {
+Snapshot User::Save() {
 
     // TODO : Implement
 
-    return NULL;
+    Snapshot a(this->_username, this->_password);
+
+    return a;
 }
 
-void User::Restore(AuditableSnapshot *memento) {
+void User::Restore(Snapshot *memento) {
+
+    this->_password = memento->state();
+
     cout << "User: My password has changed to: " << this->_password << "\n";
 }
 

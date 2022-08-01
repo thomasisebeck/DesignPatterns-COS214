@@ -1,7 +1,7 @@
 #ifndef USER_H
 #define USER_H
 
-#include "AuditableSnapshot.h"
+#include "Snapshot.h"
 #include <string>
 
 class User {
@@ -12,8 +12,9 @@ private:
 public:
     User(std::string username, std::string password);
     void SetPassword();
-    AuditableSnapshot* Save();
-    void Restore(AuditableSnapshot *memento);
+    void SetPassword(std::string pw);
+    Snapshot Save();
+    void Restore(Snapshot *memento);
 };
 
 

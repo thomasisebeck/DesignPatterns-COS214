@@ -3,6 +3,7 @@
 
 #include <string>
 
+//Virtual
 class AuditableSnapshot {
 public:
     virtual std::string GetUsername() const = 0;
