@@ -11,7 +11,7 @@ class ClassA {
 
 class ClassB {
 	public: 
-		ClassB() { "ClassB's Empty Constructor is Called"; }
+		ClassB() { cout << "ClassB's Empty Constructor is Called" << endl; }
 		~ClassB() { cout << "ClassB's Destructor is Called" << endl; }
 		void print() { cout << "I am B!" << endl; }
 };
@@ -25,14 +25,14 @@ class ClassC : public ClassA {
 
 class ClassD : public ClassA, public ClassB {
 	public: 
-		ClassD():ClassA(), ClassB() { "ClassD's Empty Constructor is Called"; }
+		ClassD():ClassA(), ClassB() { cout << "ClassD's Empty Constructor is Called" << endl; }
 		virtual ~ClassD() { cout << "ClassD's Destructor is Called" << endl; }
 		virtual void print() { cout << "I am D!" << endl; }
 };
 
 class ClassE : public ClassD {
 	public: 
-		ClassE():ClassD() { "ClassE's Empty Constructor is Called"; }
+		ClassE():ClassD() { cout << "ClassE's Empty Constructor is Called" << endl; }
 		virtual ~ClassE() { cout << "ClassE's Destructor is Called" << endl; }
 		virtual void print() {  cout << "I am E!" << endl; }
 };
@@ -40,8 +40,10 @@ class ClassE : public ClassD {
 
 int main()
 {
-	ClassC c; 
-	c.print();
+	ClassC c;
+
+    ClassE e;
+    e.print();
 	
 	return 0;
 }

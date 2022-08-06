@@ -5,11 +5,8 @@ using namespace std;
 
 int main() {
 
-    Calculator<int> c(3,4);
+    Calculator<string> c("Hello","World");
 
-    cout << c.add() << endl;
-    cout << c.subtract() << endl;
-    cout << c.divide() << endl;
     cout << c.multiply() << endl;
 
     return 0;

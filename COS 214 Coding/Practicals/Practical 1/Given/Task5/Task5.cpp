@@ -12,7 +12,7 @@ int A(int m, int n) {
 
 int main() {
 
-    cout << A(4,2) << endl;
+    cout << A(1,2) << endl;
 
     //runs out of memory
 
