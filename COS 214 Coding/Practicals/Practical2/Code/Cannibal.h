@@ -1,16 +1,14 @@
-#ifndef COS214_SNAKE_H
-#define COS214_SNAKE_H
-#include <string>
+#ifndef COS214_CANNIBAL_H
+#define COS214_CANNIBAL_H
 #include "Enemy.h"
 
-class Snake : public Enemy {
+class Cannibal: public Enemy{
 public:
-    Snake(std::string attackMove, std::string defenceMove);
+    Cannibal(std::string attackMove, std::string defenceMove);
     virtual bool hitSquadMember (SquadMember* z);
     virtual void celebrate();
     virtual bool getHit (SquadMember* z);
     virtual void die();
 };
-
 
 #endif

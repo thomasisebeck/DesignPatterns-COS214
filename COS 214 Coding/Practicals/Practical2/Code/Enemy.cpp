@@ -3,17 +3,12 @@
 #include <iostream>
 using namespace std;
 
-Enemy::Enemy(int HP, int damage, string name, string primaryWeapon, string defenceMove) {
-    this->HP = HP;
-    this->damage = damage;
-    this->name = name;
+Enemy::Enemy(string primaryWeapon, string defenceMove) {
     this->primaryWeapon = primaryWeapon;
     this->defenceMove = defenceMove;
 }
 
-string Enemy::getName() { return name; }
-
-void Enemy::setHP(int newHP) { this->HP = newHP; }
+Enemy::~Enemy() {}
 
 void Enemy::setDamage(int newDamage) { this->damage = newDamage; }
 
@@ -29,10 +24,16 @@ void Enemy::attack(SquadMember* z) {
     }
 }
 
-std::string Enemy::getPrimaryWeapon(){ return this->primaryWeapon; }
+string Enemy::getPrimaryWeapon(){ return this->primaryWeapon; }
 
-std::string Enemy::getDefenceMove(){ return this->defenceMove; }
+string Enemy::getDefenceMove(){ return this->defenceMove; }
 
-int Enemy::getHP(){ return this->HP; }
+string Enemy::getName() { return this->name; }
 
-int Enemy::getDamage(){ return this->damage; }
+void Enemy::setName(string name) { this->name = name; }
+
+void Enemy::setHP(int newHP) { this->HP = newHP; }
+
+int Enemy::getHP() const { return this->HP; }
+
+int Enemy::getDamage() const { return this->damage; }

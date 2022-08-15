@@ -2,8 +2,8 @@
 #include <iostream>
 using namespace std;
 
-Snake::Snake(int HP, int damage, string name, string attackMove, string defenceMove)
-        : Enemy(HP, damage, name, attackMove, defenceMove) {}
+Snake::Snake(string attackMove, string defenceMove)
+        : Enemy(attackMove, defenceMove) {}
 
 bool Snake::hitSquadMember(SquadMember *z) {
     cout << "Snake wraps around " << z->getName()
@@ -26,7 +26,7 @@ bool Snake::getHit(SquadMember *z) {
         << this->getDefenceMove() << "." << endl;
 
     // Same for all Enemies
-    this->setHP(this->getHP() - z->getDamage());
+    this->takeDamage(z->getDamage());
     if (this->getHP() <= 0)
         return true;
 

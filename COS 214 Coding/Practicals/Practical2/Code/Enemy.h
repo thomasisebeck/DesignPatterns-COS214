@@ -7,20 +7,22 @@ class Enemy {
 private:
     int HP;
     int damage;
-    std::string name;
     std::string primaryWeapon;
     std::string defenceMove;
+    std::string name;
 public:
-    Enemy(int HP, int damage, std::string name, std::string primaryWeapon, std::string defenceMove);
+    Enemy(std::string primaryWeapon, std::string defenceMove);
+    virtual ~Enemy();
     void setDamage(int newDamage);
-    std::string getName();
-    void setHP(int newHP);
     void attack(SquadMember* z);
     void takeDamage(int attack);
     std::string getPrimaryWeapon();
     std::string getDefenceMove();
-    int getHP();
-    int getDamage();
+    std::string getName();
+    void setName(std::string name);
+    void setHP(int newHP);
+    int getHP() const;
+    int getDamage() const;
 
     virtual bool hitSquadMember (SquadMember* z) = 0;
     virtual void celebrate() = 0;
