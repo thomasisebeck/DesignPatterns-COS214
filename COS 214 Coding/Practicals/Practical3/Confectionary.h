@@ -28,6 +28,10 @@ public:
         return strm.str();
     }
     double getPrice() { return price; }
+    ~Confectionary() {
+        cout << "<< deleted product: " << type << " (" << manufacturer << ") >>" << endl;
+    }
+
 };
 
 //init the counter to 0
