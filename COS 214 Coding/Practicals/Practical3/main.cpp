@@ -1,10 +1,22 @@
 #include <iostream>
 #include <iomanip>
+
 #include "Confectionary.h"
 #include "LindtFactory.h"
 #include "CadburyFactory.h"
 #include "NestleFactory.h"
 #include "GiftBasket.h"
+#include "AddOn.h"
+
+#include "BattleStateContext.h"
+#include "BattleState.h"
+#include "AgileBattleState.h"
+#include "NormalBattleState.h"
+#include "StrongBattleState.h"
+#include "Pokemon.h"
+#include "AttackPlayStyle.h"
+#include "PhysicalAttackPlayStyle.h"
+#include "RunPlayStyle.h"
 using namespace std;
 
 int validateInput(int low, int high) {
@@ -40,11 +52,8 @@ void printList(std::list<Confectionary*>::iterator beg, std::list<Confectionary*
     }
 }
 
-int main() {
-
-    //------------- STATIC IMPLEMENTATION -----------//
-
-   /* cout << "Choose the number of products to create (1 to 10): " << endl;
+void staticDecorator() {
+    cout << "Choose the number of products to create (1 to 10): " << endl;
     int numProducts = validateInput(1, 10);
 
     Confectionary* Product;
@@ -128,23 +137,39 @@ int main() {
 
     for (int i = 0; i < numProducts; i++)
         delete ProductArray[i];
-    delete [] ProductArray;*/
+    delete [] ProductArray;
+}
 
-    //------------- DYNAMIC IMPLEMENTATION -----------//
+void printBaskets(GiftBasket* currentBasket){
+    if (currentBasket == nullptr) return ;
 
+    currentBasket->print();
+    printBaskets(currentBasket->getNext());
+}
+
+double calculatePrice(GiftBasket* currentBasket, double price){
+    if (currentBasket == nullptr)
+        return price;
+
+    calculatePrice(currentBasket->getNext(), price + currentBasket->getPrice());
+}
+
+void dynamicDecorator() {
     Confectionary* Product;
     ConfectionaryFactory* Factory;
 
-    GiftBasket basket;
-
     int manufacturer = 1;
+
+    bool firstItem = true;
+
+    GiftBasket* basket = nullptr;
 
     while (manufacturer > 0) {
         cout << "Choose a manufacturer: " << endl;
         cout << "1. Cadbury" << endl;
         cout << "2. Lindt" << endl;
         cout << "3. Nestle" << endl;
-        cout << "0. Exit and get total" << endl;
+        cout << "0. Exit and go to add-ons" << endl;
 
         manufacturer = validateInput(0, 4);
 
@@ -199,21 +224,231 @@ int main() {
                 type = validateInput(1,2);
             }
         }
-
-        basket.addItem(Product);
+        //only one gift basket
         cout << ">> added item to basket << " << endl << endl;
+
+        if (firstItem) {
+            firstItem = false;
+            basket = new GiftBasket(Product);
+        }
+        else {
+            basket = new GiftBasket(basket, Product);
+        }
 
     }
 
-    std::list<Confectionary*> list = basket.getList();
-    std::list<Confectionary*>::iterator beg = list.begin();
-    std::list<Confectionary*>::iterator end = list.end();
+    int addons = 1;
 
-    //cout << (*currentItem)->getDescription() << endl;
-    //currentItem = currentItem.operator++();
-   // cout << (*currentItem)->getDescription() << endl;
+    while (addons > 0) {
+        cout << "Choose an add-on: " << endl;
+        cout << "1. Ribbon" << endl;
+        cout << "2. Note" << endl;
+        cout << "3. Card" << endl;
+        cout << "4. Flower" << endl;
+        cout << "5. Valentines day discount (-5%)" << endl;
+        cout << "6. Mothers day discount (-3.5%)" << endl;
+        cout << "7. Spring day discount (-7%)" << endl;
+        cout << "0. Exit and get total" << endl;
 
-    printList(beg, end, 0);
+        addons = validateInput(0, 7);
+
+        double total = calculatePrice(basket, 0.00);
+
+        if (addons <= 0) {
+            addons = 0;
+            break; //exit the loop and print
+        }
+
+        double discount = 0.00;
+
+        bool hasNote = false;
+        bool hasCard = false;
+
+        if (addons >= 5 && addons <= 7) { //adding a discount
+            //check if a discount has already been applied
+            if (basket->hasDiscount())
+                cout << "You have already applied a discount" << endl;
+            else {
+                switch (addons) {
+                    case 5: //-5%
+                        discount = 0.05;
+                        Product = new AddOn(((total - total * (1 - 0.05)) * -1), "Valentines day discount", "-5%");
+                        basket = new GiftBasket(basket, Product);
+                        break;
+                    case 6: //-3.5%
+                        discount = 0.35;
+                        Product = new AddOn(((total - total * (1 - 0.035)) * -1), "Mothers day discount", "-3.5%");
+                        basket = new GiftBasket(basket, Product);
+                        break;
+                    case 7: //-7%
+                        discount = 0.07;
+                        Product = new AddOn(((total - total * (1 - 0.07)) * -1), "Valentines day discount", "-7%");
+                        basket = new GiftBasket(basket, Product);
+                }
+            }
+        } else { //adding something that costs money
+            string memVar = "";
+            switch (addons) {
+                case 1: //Ribbon
+                    //Disount not allowed
+                    cout << "Enter the color of the ribbon: ";
+                    cin >> memVar;
+                    Product = new AddOn(7.75, "Ribbon Color", memVar);
+                    basket = new GiftBasket(basket, Product);
+                    break;
+                case 2: //Note
+                    if (!hasNote) {
+                        //Free
+                        cout << "Enter message: ";
+                        cin.ignore();
+                        getline(cin, memVar);
+                        Product = new AddOn(0, "Note", memVar);
+                        basket = new GiftBasket(basket, Product);
+                        hasNote = true;
+                    }
+                    else
+                        cout << "You have already written a note." << endl;
+                    break;
+                case 3: //Card
+                    if (!hasCard) {
+                        //Discount allowed
+                        cout << "Enter message: ";
+                        cin.ignore();
+                        getline(cin, memVar);
+                        Product = new AddOn(25.90 - (25.95 * discount), "Card", memVar);
+                        basket = new GiftBasket(basket, Product);
+                        hasCard = true;
+                    }
+                    else
+                        cout << "You have already written a card." << endl;
+                    break;
+                case 4: //Flower
+                    //Discount allowed
+                    cout << "Enter the type/variety of the flower: ";
+                    cin >> memVar;
+                    Product = new AddOn(3.99 - (3.99 * discount), "Flower type", memVar);
+                    basket = new GiftBasket(basket, Product);
+            }
+        }
+
+    }
+
+   printBaskets(basket);
+
+   double total = calculatePrice(basket, 0.00);
+
+   cout << endl << "=======================" << endl;
+   cout         << "TOTAL: R" << total << endl;
+   cout         << "=======================" << endl;
+}
+
+void statePattern() {
+
+    //std::string name, int HP, int damage, PlayStyle* initialPlaystyle
+
+    PlayStyle* AttackStyle = new AttackPlayStyle;
+    PlayStyle* PhysicalAttackStyle = new PhysicalAttackPlayStyle;
+    PlayStyle* RunStyle = new RunPlayStyle;
+
+    //Initialise with agile state
+    Pokemon Pikachu("Pikachu", 10, 3, AttackStyle);
+    Pokemon Vulpix("Vulpix", 15, 4, PhysicalAttackStyle);
+
+    while (Pikachu.getHP() > 0 && Vulpix.getHP() > 0) {
+        cout << "Select play style for " << Pikachu.getName() << ":" << endl;
+        cout << "1. Attack" << endl;
+        cout << "2. Physical Attack" << endl;
+        cout << "3. Run" << endl;
+        int pikaPlay = validateInput(1, 3);
+
+        cout << "Select play style for " << Vulpix.getName() << ":" << endl;
+        cout << "1. Attack" << endl;
+        cout << "2. Physical Attack" << endl;
+        cout << "3. Run" << endl;
+        int vulPlay = validateInput(1, 3);
+
+        switch (pikaPlay) {
+            case 1:
+                Pikachu.selectPlayStyle(new AttackPlayStyle());
+                break;
+            case 2:
+                Pikachu.selectPlayStyle(new PhysicalAttackPlayStyle());
+                break;
+            case 3:
+                Pikachu.selectPlayStyle(new RunPlayStyle());
+                break;
+        }
+
+        switch (vulPlay) {
+            case 1:
+                Vulpix.selectPlayStyle(new AttackPlayStyle());
+                break;
+            case 2:
+                Vulpix.selectPlayStyle(new PhysicalAttackPlayStyle());
+                break;
+            case 3:
+                Vulpix.selectPlayStyle(new RunPlayStyle());
+                break;
+        }
+
+        cout << "Select battle state style for " << Pikachu.getName() << ":" << endl;
+        cout << "1. Normal" << endl;
+        cout << "2. Agile" << endl;
+        cout << "3. Strong" << endl;
+        pikaPlay = validateInput(1, 3);
+
+        cout << "Select battle state style for " << Vulpix.getName() << ":" << endl;
+        cout << "1. Normal" << endl;
+        cout << "2. Agile" << endl;
+        cout << "3. Strong" << endl;
+        vulPlay = validateInput(1, 3);
+
+        switch (pikaPlay) {
+            case 1:
+                Pikachu.selectBattleState(new NormalBattleState());
+                break;
+            case 2:
+                Pikachu.selectBattleState(new AgileBattleState());
+                break;
+            case 3:
+                Pikachu.selectBattleState(new StrongBattleState());
+        }
+
+        switch (vulPlay) {
+            case 1:
+                Vulpix.selectBattleState(new NormalBattleState());
+                break;
+            case 2:
+                Vulpix.selectBattleState(new AgileBattleState());
+                break;
+            case 3:
+                Vulpix.selectBattleState(new StrongBattleState());
+        }
+
+        cout << "^^^^^^^^^^^^^^ BATTLE STARTED ^^^^^^^^^^^^^^" << endl;
+        Pikachu.attack(Vulpix);
+        cout << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << endl;
+
+    }
+
+
+}
+
+int main() {
+
+    //NB come back to 3.3 and 3.4
+
+    //------------- STATIC IMPLEMENTATION -----------//
+
+    //staticDecorator();
+
+    //------------- DYNAMIC IMPLEMENTATION -----------//
+
+    dynamicDecorator();
+
+    //----------------- POKEMON CLASS ---------------//
+
+    //statePattern();
 
     return 0;
 }

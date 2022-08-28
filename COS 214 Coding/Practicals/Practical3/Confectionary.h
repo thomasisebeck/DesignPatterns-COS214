@@ -4,6 +4,8 @@
 #include <string>
 using namespace std;
 
+//basic web page
+
 class Confectionary { //PARENT ABSTRACT PRODUCT
 private:
     string manufacturer;
@@ -11,7 +13,7 @@ private:
     string type;
     static int id;
 public:
-    Confectionary()= default;
+    //normal constructor for the base class
     Confectionary(string manufacturer, double price, string type) {
         id++;
         this->manufacturer = manufacturer;

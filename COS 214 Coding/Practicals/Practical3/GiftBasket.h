@@ -3,21 +3,46 @@
 #include <list>
 #include "Confectionary.h"
 
-class GiftBasket: public Confectionary {
+class GiftBasket {
 private:
-    std::list<Confectionary*> items;
+    Confectionary* toDecorate;
+    GiftBasket* nextBasket;
 public:
-    //construct the Confectionary and items using default constructor
-    GiftBasket() : Confectionary(), items() {}
 
-    void addItem(Confectionary* item) { items.push_back(item); }
+    GiftBasket(Confectionary *toDecorate)  {
+        this->toDecorate = toDecorate;
+        nextBasket = nullptr;
+    }
 
-    std::list<Confectionary*> getList() { return items; }
+    GiftBasket(GiftBasket* oldBasket, Confectionary* toDecorate) {
+        nextBasket = oldBasket;
+        this->toDecorate = toDecorate;
+    }
+
+    GiftBasket* getNext() { return nextBasket; }
+    double getPrice() { return toDecorate->getPrice(); }
+
+    void print() {
+        cout << toDecorate->getDescription() << endl;
+    }
+
+    bool hasDiscount() {
+        Confectionary* currConfectionary = toDecorate;
+        GiftBasket* currBasket = this;
+
+        while (currBasket != nullptr) {
+            if (currConfectionary->getPrice() < 0)
+                return true;
+            currBasket = currBasket->nextBasket;
+            if (currBasket != nullptr)
+                currConfectionary = currBasket->toDecorate;
+        }
+
+        return false;
+    }
 
     ~GiftBasket() {
-        std::list<Confectionary*>::iterator it;
-        for (it = items.begin(); it != items.end(); ++it)
-            delete *it;
+        delete toDecorate;
     }
 };
 
