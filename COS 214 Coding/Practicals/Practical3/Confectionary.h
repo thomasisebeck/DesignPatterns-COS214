@@ -18,8 +18,6 @@ public:
         this->type = type;
     }
     virtual string getDescription() {
-
-
         stringstream strm;
         strm << "---- Confectionary Details ----" << endl;
         strm << "manufacturer: " << this->manufacturer << endl;
@@ -28,8 +26,8 @@ public:
         strm << "id: " << this->id << endl;
 
         return strm.str();
-
     }
+    double getPrice() { return price; }
 };
 
 //init the counter to 0

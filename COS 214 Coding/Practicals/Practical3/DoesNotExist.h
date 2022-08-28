@@ -5,7 +5,7 @@
 class DoesNotExist: public Chocolate{
 public:
     DoesNotExist(bool slab)
-            : Chocolate("Nonexistent Product", 0.00, false) {}
+            : Chocolate("Nonexistent Product", -1.00, false) {}
 };
 
 #endif

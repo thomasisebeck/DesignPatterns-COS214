@@ -9,10 +9,12 @@ int validateInput(int low, int high) {
     cout << "-> ";
     int option;
     cin >> option;
+    cout << endl;
 
     while (option < low || option > high) {
         cout << "Choose valid option -> ";
         cin >> option;
+        cout << endl;
     }
 
     return option;
@@ -50,19 +52,31 @@ int main() {
 
     int type = validateInput(1,2);
 
-    Confectionary* Product = nullptr;
+    //object with price == -1
+    Confectionary* Product = new DoesNotExist(false);
 
-    if (type == 1) { //Regular
-        cout << "1. Slab" << endl;
-        cout << "2. Mini bar" << endl;
-        int slab = validateInput(1, 2);
-        Product = Factory->createRegular(slab == 1);
-    } else { //Aerated
-        cout << "Enter bubbles per cm^3: ";
-        int bubbles;
-        cin >> bubbles;
-        Product = Factory->createAerated(bubbles);
+    while (Product->getPrice() == -1) {
+        if (type == 1) { //Regular
+            cout << "1. Slab" << endl;
+            cout << "2. Mini bar" << endl;
+            int slab = validateInput(1, 2);
+            Product = Factory->createRegular(slab == 1);
+        } else { //Aerated
+            cout << "Enter bubbles per cm^3: ";
+            int bubbles;
+            cin >> bubbles;
+            cout << endl;
+            Product = Factory->createAerated(bubbles);
+        }
+
+        if (Product->getPrice() == -1) { //nonexistent
+            cout << "Choose a product type: " << endl;
+            cout << "1. Regular" << endl;
+            cout << "2. Aerated" << endl;
+            type = validateInput(1,2);
+        }
     }
+
 
     cout << endl << Product->getDescription() << endl;
 
