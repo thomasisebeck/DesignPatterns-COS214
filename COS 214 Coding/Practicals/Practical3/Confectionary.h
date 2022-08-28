@@ -11,6 +11,7 @@ private:
     string type;
     static int id;
 public:
+    Confectionary()= default;
     Confectionary(string manufacturer, double price, string type) {
         id++;
         this->manufacturer = manufacturer;
