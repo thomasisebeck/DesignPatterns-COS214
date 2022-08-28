@@ -436,7 +436,7 @@ void statePattern() {
 
 int main() {
 
-    //NB come back to 3.3 and 3.4
+    //DO UML'S and questions!!!!!
 
     //------------- STATIC IMPLEMENTATION -----------//
 
@@ -444,7 +444,7 @@ int main() {
 
     //------------- DYNAMIC IMPLEMENTATION -----------//
 
-    dynamicDecorator();
+    //dynamicDecorator();
 
     //----------------- POKEMON CLASS ---------------//
 
