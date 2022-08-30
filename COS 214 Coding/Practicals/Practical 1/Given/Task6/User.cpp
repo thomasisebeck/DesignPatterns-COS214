@@ -32,13 +32,11 @@ void User::SetPassword(std::string pw) {
 void User::SetPassword() {
     cout << "User: Setting a new secure password.\n";
 
-    // TODO : Implement
     this->_password = GenerateRandomString();
     cout << "User: My password has been changed to: " << this->_password << "\n";
 }
 
 Snapshot User::Save() {
-    // TODO : Implement
     Snapshot a(this->_username, this->_password);
     return a;
 }

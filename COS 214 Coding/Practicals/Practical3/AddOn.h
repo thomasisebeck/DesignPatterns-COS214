@@ -23,7 +23,7 @@ public:
         //print myself
         strm << "---- Add on Details ----" << endl;
         strm << this->memVarName << ": " << this->memVar << endl;
-        strm << "price: " << this->price << endl;
+        strm << "price: R" << setprecision(2) << this->price << endl;
 
         return strm.str();
     }

@@ -8,7 +8,6 @@
 #include "GiftBasket.h"
 #include "AddOn.h"
 
-#include "BattleStateContext.h"
 #include "BattleState.h"
 #include "AgileBattleState.h"
 #include "NormalBattleState.h"
@@ -36,6 +35,8 @@ int validateInput(int low, int high) {
 
 void printList(std::list<Confectionary*>::iterator beg, std::list<Confectionary*>::iterator end, double cost) {
 
+    cout << setprecision(2) << cost << endl;
+
     if (cost == 0)
         cout << "=============== BASKET CONTENTS ===============" << endl;
 
@@ -46,7 +47,7 @@ void printList(std::list<Confectionary*>::iterator beg, std::list<Confectionary*
         printList(++beg, end, cost);
     } else {
         cout << ".................." << endl;
-        cout << "TOTAL COST: R" << setprecision(2) << cost << endl;
+        cout << "TOTAL COST: R" << fixed << setprecision(2) << cost << endl;
         cout << "===============================================" << endl << endl << endl;
 
     }
@@ -151,7 +152,7 @@ double calculatePrice(GiftBasket* currentBasket, double price){
     if (currentBasket == nullptr)
         return price;
 
-    calculatePrice(currentBasket->getNext(), price + currentBasket->getPrice());
+    return calculatePrice(currentBasket->getNext(), price + currentBasket->getPrice());
 }
 
 void dynamicDecorator() {
@@ -169,9 +170,13 @@ void dynamicDecorator() {
         cout << "1. Cadbury" << endl;
         cout << "2. Lindt" << endl;
         cout << "3. Nestle" << endl;
-        cout << "0. Exit and go to add-ons" << endl;
+        if (!firstItem)
+            cout << "0. Exit and go to add-ons" << endl;
 
-        manufacturer = validateInput(0, 4);
+        if (!firstItem)
+            manufacturer = validateInput(0, 3);
+        else
+            manufacturer = validateInput(1,3);
 
         if (manufacturer <= 0) {
             manufacturer = 0;
@@ -292,7 +297,8 @@ void dynamicDecorator() {
                 case 1: //Ribbon
                     //Disount not allowed
                     cout << "Enter the color of the ribbon: ";
-                    cin >> memVar;
+                    cin.ignore();
+                    getline(cin, memVar);
                     Product = new AddOn(7.75, "Ribbon Color", memVar);
                     basket = new GiftBasket(basket, Product);
                     break;
@@ -325,7 +331,8 @@ void dynamicDecorator() {
                 case 4: //Flower
                     //Discount allowed
                     cout << "Enter the type/variety of the flower: ";
-                    cin >> memVar;
+                    cin.ignore();
+                    getline(cin, memVar);
                     Product = new AddOn(3.99 - (3.99 * discount), "Flower type", memVar);
                     basket = new GiftBasket(basket, Product);
             }
@@ -338,7 +345,7 @@ void dynamicDecorator() {
    double total = calculatePrice(basket, 0.00);
 
    cout << endl << "=======================" << endl;
-   cout         << "TOTAL: R" << total << endl;
+   cout         << "TOTAL: R" << fixed << setprecision(2) << total << endl;
    cout         << "=======================" << endl;
 }
 
@@ -444,7 +451,7 @@ int main() {
 
     //------------- DYNAMIC IMPLEMENTATION -----------//
 
-    //dynamicDecorator();
+    dynamicDecorator();
 
     //----------------- POKEMON CLASS ---------------//
 
@@ -452,3 +459,4 @@ int main() {
 
     return 0;
 }
+

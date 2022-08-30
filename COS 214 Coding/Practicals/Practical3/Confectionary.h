@@ -24,7 +24,7 @@ public:
         stringstream strm;
         strm << "---- Confectionary Details ----" << endl;
         strm << "manufacturer: " << this->manufacturer << endl;
-        strm << "price: " << this->price << endl;
+        strm << "price: R" << setprecision(2) << this->price << endl;
         strm << "type: " << this->type << endl;
         strm << "id: " << this->id << endl;
 
