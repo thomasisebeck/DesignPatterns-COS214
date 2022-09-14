@@ -18,6 +18,7 @@ public:
     }
     bool isDirectory() { return this->directory; }
     virtual void listItems(int indent) = 0;
+    virtual std::string getContents() = 0;
 };
 
 #endif
