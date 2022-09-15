@@ -27,7 +27,7 @@ bool Directory::addItem(Node* item) {
     if (!this->synchronous && item->isDirectory()) { //is async && directory
         //cheeck that the dicretory is not syncrhonous
         if (dynamic_cast<Directory*>(item)->synchronous) { //item is async
-            cout << "<<error: cannot add synchronous '" << item->getName() << "' in an async folder '" << this->getName() << "'>>" << endl;
+            cout << "<<error: cannot add synchronous directory '" << item->getName() << "' in an async directory '" << this->getName() << "'>>" << endl;
             return false;
         }
     }
