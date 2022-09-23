@@ -1,10 +1,13 @@
 #include "Directory.h"
-#include "File.h"
 #include <iostream>
+#include <Windows.h>
+#include <cstdio>
 
 using namespace std;
 
-Directory::Directory(string name) : Node(name, true) {}
+Directory::Directory(string name, bool synchronous) : Node(name, true) {
+    this->synchronous = synchronous;
+}
 
 int Directory::find(Node* item) {
     list<Node*>::iterator it;
@@ -20,6 +23,14 @@ int Directory::find(Node* item) {
 bool Directory::addItem(Node* item) {
     list<Node*>::iterator it;
     int index = find(item);
+
+    if (!this->synchronous && item->isDirectory()) { //is async && directory
+        //cheeck that the dicretory is not syncrhonous
+        if (dynamic_cast<Directory*>(item)->synchronous) { //item is async
+            cout << "<<error: cannot add synchronous directory '" << item->getName() << "' in an async directory '" << this->getName() << "'>>" << endl;
+            return false;
+        }
+    }
 
     if (index == -1) { //not found, can add
         this->items.push_back(item);
@@ -42,16 +53,28 @@ bool Directory::removeItem(std::string name) {
     return false;
 }
 
+std::string Directory::getContents(){
+    return ""; //empty
+}
+
 void Directory::listItems(int indent) {
 
     for (int i = 0; i < indent; i++)
         cout << "  ";
 
-    string folderIcon = "▶ ";
+    // Set console code page to UTF-8 so console known how to interpret string data
+    SetConsoleOutputCP(CP_UTF8);
+
+    // Enable buffering to prevent VS from chopping up UTF-8 byte sequences
+    setvbuf(stdout, nullptr, _IOFBF, 1000);
+
+
+    string folderIcon = "⬒ ";
+
     if (this->isDirectory())
         cout << folderIcon;
 
-    cout << this->getName() << endl;
+    cout << this->getName() << (this->synchronous ? " § " : "") << endl;
 
     list<Node*>::iterator it;
     for (it = items.begin(); it != items.end(); it++){
@@ -64,7 +87,8 @@ void Directory::listItems(int indent) {
             //list contents
             for (int i = 0; i < indent; i++)
                 cout << "  ";
-            cout << "  " << (*it)->getName() << " [" << dynamic_cast<File*>(*it)->getContents() << "]" << endl;
+            cout << "  ☐ " << (*it)->getName() << " [" << (*it)->getContents() << "]" << endl;
+
         }
     }
 }
