@@ -22,7 +22,6 @@ public:
 
     virtual void listItems(int indent);
 
-	bool addItem(Node* item);
 	bool removeItem(std::string name);
     int find(Node* item);
     virtual std::string getContents();
