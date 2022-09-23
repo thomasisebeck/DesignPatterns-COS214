@@ -101,17 +101,16 @@ std::string Directory::getContents(){
 
 void Directory::listItems(int indent, bool listAll) {
 
-    for (int i = 0; i < indent; i++)
-        cout << "  ";
-
     SetConsoleOutputCP(CP_UTF8);
     // Enable buffering to prevent VS from chopping up UTF-8 byte sequences
     setvbuf(stdout, nullptr, _IOFBF, 1000);
 
-    string folderIcon = "⬒ ";
+
+    for (int i = 0; i < indent; i++)
+        cout << "  ";
 
     if (this->isDirectory())
-        cout << folderIcon;
+        cout << "⬒ ";
 
     cout << this->getName() << (this->synchronous ? " § " : "") << endl;
 
@@ -119,8 +118,13 @@ void Directory::listItems(int indent, bool listAll) {
     for (it = items.begin(); it != items.end(); it++){
 
         if ((*it)->isDirectory()) {
-            (*it)->listItems(++indent, true);
-            indent--;
+            if (listAll) {
+                (*it)->listItems(++indent, true);
+                indent--;
+            }
+            else {
+                cout << "  ⬒ " << (*it)->getName() << ((*it)->isSynchronous() ? " § " : "") << endl;
+            }
         }
         else {
             //list contents

@@ -21,7 +21,7 @@ public:
     }
 
     void addNode(Directory* node) {
-        list.push_back(node);
+        list.push_front(node);
     }
 
     void print() {

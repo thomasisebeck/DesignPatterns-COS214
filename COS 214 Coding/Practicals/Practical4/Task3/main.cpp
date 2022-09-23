@@ -61,8 +61,10 @@ Directory* cmd(string command, Directory *dir, NavigatorMemento& nav) {
         if (command.find("cd") != -1) {
 
             if (command.find("../") != -1) {
-                if (dir->getName() == "root")
+                if (dir->getName() == "root") {
+                    dir->listItems(0, false);
                     return dir; //can't go up from root
+                }
 
                 //pop the memento off of the stack
                 dir = nav.getLastNode();
@@ -110,11 +112,6 @@ int main() {
     currentFile = cmd("touch horse.jpg photo of horse", currentFile, navigatorMemento);
     currentFile = cmd("touch dog.jpg photo of dog", currentFile, navigatorMemento);
     currentFile = cmd("cd ../", currentFile, navigatorMemento);
-    /*currentFile = cmd("cd memes", currentFile, navigatorMemento);
-    currentFile = cmd("touch Taaaaaaaablet", currentFile, navigatorMemento);
-    currentFile = cmd("touch Vrooom", currentFile, navigatorMemento);
-    currentFile = cmd("cd ../", currentFile, navigatorMemento);
-    currentFile = cmd("ls", currentFile, navigatorMemento);*/
 
 
     while (true) {
