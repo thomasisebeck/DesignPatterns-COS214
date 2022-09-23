@@ -11,6 +11,19 @@ Directory::Directory(string name, bool synchronous) : Node(name, true) {
 
 // --------------- UTILITIES --------------//
 
+Directory* Directory::getChildDir(std::string name) {
+    NodeIterator iter(this->items);
+
+    int i = 0;
+    while (iter.hasNext()) {
+        if (iter.current()->getName() == name && iter.current()->isDirectory())
+            return dynamic_cast<Directory *>(iter.current());
+        i++;
+        ++iter;
+    }
+
+    return nullptr; //not found
+}
 int Directory::find(Node* item) {
 
     NodeIterator iter(this->items);

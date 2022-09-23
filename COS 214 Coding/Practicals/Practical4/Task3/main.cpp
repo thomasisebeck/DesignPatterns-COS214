@@ -2,6 +2,7 @@
 #include "File.h"
 #include "Directory.h"
 #include "Node.h"
+#include "NavigatorMemento.h"
 using namespace std;
 
 int validate(string input, int lower, int upper) {
@@ -13,7 +14,7 @@ int validate(string input, int lower, int upper) {
     return stoi(input);
 }
 
-void cmd(string command, Directory& dir) {
+Directory* cmd(string command, Directory *dir, NavigatorMemento& nav) {
 
     if (command.find("touch ") != -1) { //make a file
         command = command.substr(command.find("touch ") + 6, command.length());
@@ -21,9 +22,9 @@ void cmd(string command, Directory& dir) {
         string contents;
         cout << " Enter file contents: ";
         getline(cin, contents);
-        dir.addFile(new File(command, contents));
+        dir->addFile(new File(command, contents));
 
-        return ;
+        return dir;
     }
 
     if (command.find("mkdir ") != -1) { //make a directory
@@ -38,14 +39,39 @@ void cmd(string command, Directory& dir) {
 
         bool isSync = input == 1 ? true : false;
 
-        dir.addDirectory(new Directory(command, isSync));
+        dir->addDirectory(new Directory(command, isSync));
 
-        return ;
+        return dir;
     }
 
     if (command.find("ls") != -1) { //list dir
-        dir.listItems(0);
-        return ;
+        dir->listItems(0);
+        return dir;
+    }
+
+    if (command.find("cd") != -1) {
+
+        if (command.find("../") != -1) {
+            //pop the memento off of the stack
+            cout << " getting from stack... " << endl;
+            dir = nav.getLastNode();
+            cout << " got " << dir->getName() << endl;
+            return dir;
+        }
+
+        //make dir a child of dir
+
+        command = command.substr(command.find("cd ") + 3, command.length());
+        Directory* tempDir = dir->getChildDir(command);
+
+        if (tempDir == nullptr) {
+            cout << "<< cannot find directory '" << command << "' >>" << endl;
+            return dir;
+        }
+
+        //push dir onto the memento stack...
+        nav.addNode(dir);
+        return tempDir;
     }
 
     cout << "<< unrecognised command '" << command << "' >>" << endl;
@@ -53,9 +79,18 @@ void cmd(string command, Directory& dir) {
 
 int main() {
 
-    Directory root("root", true);
+    //to navigate
+    NavigatorMemento navigatorMemento;
+
+    Directory* root = new Directory("root", true);
+    Directory* currentFile = root;
 
     string currentCommand;
+
+    currentFile = cmd("mkdir newDir", currentFile, navigatorMemento);
+    currentFile = cmd("ls", currentFile, navigatorMemento);
+    currentFile = cmd("cd newDir", currentFile, navigatorMemento);
+    currentFile = cmd("ls", currentFile, navigatorMemento);
 
     while (true) {
 
@@ -68,8 +103,10 @@ int main() {
             return 0;
         }
 
-        cmd(currentCommand, root);
+        currentFile = cmd(currentCommand, currentFile, navigatorMemento);
     }
+
+
 
     /*root.addFile(new File("dog.docx", "story of a good dog"));
 

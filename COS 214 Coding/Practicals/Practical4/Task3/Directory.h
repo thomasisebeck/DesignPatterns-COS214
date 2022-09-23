@@ -19,11 +19,13 @@ public:
     void addFile(File* f);
     void removeFile(std::string name);
     bool listFiles(); //calls list items
+    Directory* getChildDir(std::string name);
 
     virtual void listItems(int indent);
 
 	bool removeItem(std::string name);
     int find(Node* item);
+    int getIndex(std::string name);
     virtual std::string getContents();
 
 };
