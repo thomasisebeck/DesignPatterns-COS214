@@ -16,65 +16,82 @@ int validate(string input, int lower, int upper) {
 
 Directory* cmd(string command, Directory *dir, NavigatorMemento& nav) {
 
-    if (command.find("touch ") != -1) { //make a file
-        command = command.substr(command.find("touch ") + 6, command.length());
+    while (true) {
 
-        string contents;
-        cout << " Enter file contents: ";
-        getline(cin, contents);
-        dir->addFile(new File(command, contents));
+        if (command.find("touch ") != -1) { //make a file
+            command = command.substr(command.find("touch ") + 6, command.length());
 
-        return dir;
-    }
+            string name = command.substr(0, command.find(" "));
+            command = command.substr(command.find(" ") + 1, command.length());
 
-    if (command.find("mkdir ") != -1) { //make a directory
-        command = command.substr(command.find("mkdir ") + 6, command.length());
+            dir->addFile(new File(name, command));
 
-        cout << "[1. Synchronous, 2. Asynchronous]: ";
-
-        string sync;
-        getline(cin, sync);
-
-        int input = validate(sync, 1, 2);
-
-        bool isSync = input == 1 ? true : false;
-
-        dir->addDirectory(new Directory(command, isSync));
-
-        return dir;
-    }
-
-    if (command.find("ls") != -1) { //list dir
-        dir->listItems(0);
-        return dir;
-    }
-
-    if (command.find("cd") != -1) {
-
-        if (command.find("../") != -1) {
-            //pop the memento off of the stack
-            cout << " getting from stack... " << endl;
-            dir = nav.getLastNode();
-            cout << " got " << dir->getName() << endl;
             return dir;
         }
 
-        //make dir a child of dir
+        if (command.find("mkdir ") != -1) { //make a directory
+            command = command.substr(command.find("mkdir ") + 6, command.length());
 
-        command = command.substr(command.find("cd ") + 3, command.length());
-        Directory* tempDir = dir->getChildDir(command);
+            cout << "[1. Synchronous, 2. Asynchronous]: ";
 
-        if (tempDir == nullptr) {
-            cout << "<< cannot find directory '" << command << "' >>" << endl;
+            string sync;
+            getline(cin, sync);
+
+            int input = validate(sync, 1, 2);
+
+            bool isSync = input == 1 ? true : false;
+
+            dir->addDirectory(new Directory(command, isSync));
+
+            dir->listItems(0, false);
+
             return dir;
         }
 
-        //push dir onto the memento stack...
-        nav.addNode(dir);
-        return tempDir;
-    }
+        if (command.find("lsa") != -1) { //list all directories
+            dir->listItems(0, true);
+            return dir;
+        }
 
-    cout << "<< unrecognised command '" << command << "' >>" << endl;
+        if (command.find("ls") != -1) { //list current directories
+            dir->listItems(0, false);
+            return dir;
+        }
+
+        if (command.find("cd") != -1) {
+
+            if (command.find("../") != -1) {
+                if (dir->getName() == "root")
+                    return dir; //can't go up from root
+
+                //pop the memento off of the stack
+                dir = nav.getLastNode();
+                dir->listItems(0, false);
+                return dir;
+            }
+
+            //make dir a child of dir
+
+            command = command.substr(command.find("cd ") + 3, command.length());
+            Directory* tempDir = dir->getChildDir(command);
+
+            if (tempDir == nullptr) {
+                cout << "<< cannot find directory '" << command << "' >>" << endl;
+                return dir;
+            }
+
+            //push dir onto the memento stack...
+            nav.addNode(dir);
+            tempDir->listItems(0, false);
+            return tempDir;
+        }
+
+        cout << "<< unrecognised command '" << command << "' >>" << endl;
+
+        cout << ">";
+
+        getline(cin, command);
+    }
 }
 
 int main() {
@@ -87,10 +104,18 @@ int main() {
 
     string currentCommand;
 
-    currentFile = cmd("mkdir newDir", currentFile, navigatorMemento);
-    currentFile = cmd("ls", currentFile, navigatorMemento);
-    currentFile = cmd("cd newDir", currentFile, navigatorMemento);
-    currentFile = cmd("ls", currentFile, navigatorMemento);
+    currentFile = cmd("mkdir photos", currentFile, navigatorMemento);
+    currentFile = cmd("mkdir memes", currentFile, navigatorMemento);
+    currentFile = cmd("cd photos", currentFile, navigatorMemento);
+    currentFile = cmd("touch horse.jpg photo of horse", currentFile, navigatorMemento);
+    currentFile = cmd("touch dog.jpg photo of dog", currentFile, navigatorMemento);
+    currentFile = cmd("cd ../", currentFile, navigatorMemento);
+    /*currentFile = cmd("cd memes", currentFile, navigatorMemento);
+    currentFile = cmd("touch Taaaaaaaablet", currentFile, navigatorMemento);
+    currentFile = cmd("touch Vrooom", currentFile, navigatorMemento);
+    currentFile = cmd("cd ../", currentFile, navigatorMemento);
+    currentFile = cmd("ls", currentFile, navigatorMemento);*/
+
 
     while (true) {
 

@@ -99,7 +99,7 @@ std::string Directory::getContents(){
     return ""; //empty
 }
 
-void Directory::listItems(int indent) {
+void Directory::listItems(int indent, bool listAll) {
 
     for (int i = 0; i < indent; i++)
         cout << "  ";
@@ -119,7 +119,7 @@ void Directory::listItems(int indent) {
     for (it = items.begin(); it != items.end(); it++){
 
         if ((*it)->isDirectory()) {
-            (*it)->listItems(++indent);
+            (*it)->listItems(++indent, true);
             indent--;
         }
         else {

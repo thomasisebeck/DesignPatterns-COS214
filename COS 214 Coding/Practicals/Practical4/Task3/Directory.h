@@ -21,13 +21,13 @@ public:
     bool listFiles(); //calls list items
     Directory* getChildDir(std::string name);
 
-    virtual void listItems(int indent);
+    virtual void listItems(int indent, bool listAll);
 
 	bool removeItem(std::string name);
     int find(Node* item);
     int getIndex(std::string name);
     virtual std::string getContents();
-
+    virtual bool isSynchronous() { return synchronous; }
 };
 
 #endif

@@ -16,8 +16,9 @@ public:
         this-> name = newName;
         return true;
     }
+    virtual bool isSynchronous() = 0;
     bool isDirectory() { return this->directory; }
-    virtual void listItems(int indent) = 0;
+    virtual void listItems(int indent, bool listAll) = 0;
     virtual bool listFiles() = 0;
     virtual std::string getContents() = 0;
 };
