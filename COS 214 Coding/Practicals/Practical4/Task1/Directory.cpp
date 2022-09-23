@@ -1,4 +1,5 @@
 #include "Directory.h"
+#include "File.h"
 #include <iostream>
 
 using namespace std;
@@ -59,11 +60,11 @@ void Directory::listItems(int indent) {
             (*it)->listItems(++indent);
             indent--;
         }
-        else {
+        else { //file
             //list contents
             for (int i = 0; i < indent; i++)
                 cout << "  ";
-            cout << "  " << (*it)->getName() << endl;
+            cout << "  " << (*it)->getName() << " [" << dynamic_cast<File*>(*it)->getContents() << "]" << endl;
         }
     }
 }
