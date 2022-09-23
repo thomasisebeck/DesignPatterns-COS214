@@ -98,6 +98,8 @@ Directory* cmd(string command, Directory *dir, NavigatorMemento& nav) {
 
 int main() {
 
+    //TODO: create a snapshot file system (backup memento for root node)
+
     //to navigate
     NavigatorMemento navigatorMemento;
 

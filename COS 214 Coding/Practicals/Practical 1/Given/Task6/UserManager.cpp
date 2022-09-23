@@ -19,7 +19,6 @@ void UserManager::clearLast() {
 
 void UserManager::Backup() {
     std::cout << endl << "UserManager: Saving User's state..." << endl;
-    // TODO : Implement
 
     if (numSaves < 5) {
         saves[numSaves++] = u->Save();
