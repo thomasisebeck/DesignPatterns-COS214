@@ -9,6 +9,23 @@ Directory::Directory(string name, bool synchronous) : Node(name, true) {
     this->synchronous = synchronous;
 }
 
+//copy constructor
+Directory::Directory(Directory &old) : Node(old.getName(), true) {
+    std::list<Node*>::iterator it;
+
+    for (it = this->items.begin(); it != this->items.end(); it++)
+        delete (*it);
+
+    for (it = old.items.begin(); it != old.items.end(); it++) {
+        if ((*it)->isDirectory())
+            this->items.push_back(new Directory(*dynamic_cast<Directory*>(*it)));
+        else
+            this->items.push_back(new File(*dynamic_cast<File*>(*it)));
+    }
+
+    this->synchronous = old.synchronous;
+}
+
 // --------------- UTILITIES --------------//
 
 Directory* Directory::getChildDir(std::string name) {
@@ -75,11 +92,15 @@ void Directory::addFile(File* file) {
 bool Directory::removeItem(string name) {
 
     NodeIterator iter(this->items);
-    while (iter.hasNext())
+    cout << "created iterator" << endl;
+
+    while (iter.hasNext()) {
         if (iter.current()->getName() == name) {
             this->items.remove((iter.current()));
             return true;
         }
+        ++iter;
+    }
 
     //item not found
     return false;

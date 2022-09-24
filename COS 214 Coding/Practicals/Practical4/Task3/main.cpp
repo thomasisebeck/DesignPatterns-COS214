@@ -2,7 +2,10 @@
 #include "File.h"
 #include "Directory.h"
 #include "Node.h"
-#include "NavigatorMemento.h"
+#include "Navigator.h"
+#include "BackupOriginator.h"
+#include "BackupCaretaker.h"
+#include "BackupMemento.h"
 using namespace std;
 
 int validate(string input, int lower, int upper) {
@@ -14,9 +17,26 @@ int validate(string input, int lower, int upper) {
     return stoi(input);
 }
 
-Directory* cmd(string command, Directory *dir, NavigatorMemento& nav) {
+Directory* cmd(string command, Directory *dir, Navigator& nav, Directory* root, BackupOriginator& originator, BackupCaretaker& caretaker) {
 
     while (true) {
+
+        if (command.find("backup") != -1) {
+            //create a memento of the file system
+            originator.setState(*root);
+            originator.storeState(caretaker);
+            root->listItems(0, true);
+            cout << "<< backup captured >>" << endl;
+            return root;
+        }
+
+        if (command.find("restore") != -1) {
+            //restore the memento of the file system
+            originator.getState()->listItems(0, true);
+            originator.reinstantiateMemento(caretaker.retrieveMemento());
+            cout << "<< backup restored >>" << endl;
+            return originator.getState();
+        }
 
         if (command.find("touch ") != -1) { //make a file
             command = command.substr(command.find("touch ") + 6, command.length());
@@ -25,6 +45,24 @@ Directory* cmd(string command, Directory *dir, NavigatorMemento& nav) {
             command = command.substr(command.find(" ") + 1, command.length());
 
             dir->addFile(new File(name, command));
+
+            dir->listItems(0, false);
+
+            return dir;
+        }
+
+        if (command.find("rm ") != -1) { //make a file
+            command = command.substr(command.find("rm ") + 3, command.length());
+
+            string name = command.substr(0, command.find(" "));
+            command = command.substr(command.find(" ") + 1, command.length());
+
+            if (dir->removeItem(name))
+                cout << "<< removed '" << name << "' >>" << endl;
+            else
+                cout << "<< could not find '" << name << "' >>" << endl;
+
+            dir->listItems(0, false);
 
             return dir;
         }
@@ -100,20 +138,25 @@ int main() {
 
     //TODO: create a snapshot file system (backup memento for root node)
 
+    //to backup
+
+    BackupOriginator originator;
+    BackupCaretaker caretaker;
+
     //to navigate
-    NavigatorMemento navigatorMemento;
+    Navigator navigatorMemento;
 
     Directory* root = new Directory("root", true);
     Directory* currentFile = root;
 
     string currentCommand;
 
-    currentFile = cmd("mkdir photos", currentFile, navigatorMemento);
-    currentFile = cmd("mkdir memes", currentFile, navigatorMemento);
-    currentFile = cmd("cd photos", currentFile, navigatorMemento);
-    currentFile = cmd("touch horse.jpg photo of horse", currentFile, navigatorMemento);
-    currentFile = cmd("touch dog.jpg photo of dog", currentFile, navigatorMemento);
-    currentFile = cmd("cd ../", currentFile, navigatorMemento);
+    currentFile = cmd("mkdir photos", currentFile, navigatorMemento, root, originator, caretaker);
+    currentFile = cmd("mkdir memes", currentFile, navigatorMemento, root, originator, caretaker);
+    currentFile = cmd("cd photos", currentFile, navigatorMemento, root, originator, caretaker);
+    currentFile = cmd("touch horse.jpg photo of horse", currentFile, navigatorMemento, root, originator, caretaker);
+    currentFile = cmd("touch dog.jpg photo of dog", currentFile, navigatorMemento, root, originator, caretaker);
+    currentFile = cmd("cd ../", currentFile, navigatorMemento, root, originator, caretaker);
 
 
     while (true) {
@@ -127,7 +170,13 @@ int main() {
             return 0;
         }
 
-        currentFile = cmd(currentCommand, currentFile, navigatorMemento);
+        if (currentCommand.find("restore") != -1) {
+            cout << "trying to restore..." << endl;
+            root = cmd(currentCommand, currentFile, navigatorMemento, root, originator, caretaker);
+            currentFile = root;
+        }
+        else
+            currentFile = cmd(currentCommand, currentFile, navigatorMemento, root, originator, caretaker);
     }
 
 

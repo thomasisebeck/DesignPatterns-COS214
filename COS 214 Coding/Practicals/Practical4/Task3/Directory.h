@@ -12,6 +12,7 @@ private:
     bool synchronous;
 public:
 	Directory(std:: string name, bool synchronous);
+    Directory(Directory& old);
     void addDirectory(Directory * dir);
     void removeDirectory(std::string name);
     bool listDirectories();
