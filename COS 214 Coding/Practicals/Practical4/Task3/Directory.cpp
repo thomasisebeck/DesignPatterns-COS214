@@ -92,7 +92,6 @@ void Directory::addFile(File* file) {
 bool Directory::removeItem(string name) {
 
     NodeIterator iter(this->items);
-    cout << "created iterator" << endl;
 
     while (iter.hasNext()) {
         if (iter.current()->getName() == name) {

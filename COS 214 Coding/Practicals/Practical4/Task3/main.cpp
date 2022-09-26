@@ -6,6 +6,7 @@
 #include "BackupOriginator.h"
 #include "BackupCaretaker.h"
 #include "BackupMemento.h"
+#include "Root.h"
 using namespace std;
 
 int validate(string input, int lower, int upper) {
@@ -21,9 +22,17 @@ Directory* cmd(string command, Directory *dir, Navigator& nav, Directory* root, 
 
     while (true) {
 
+        if (command.find("delback") != -1) {
+            caretaker.deleteMemento();
+
+            cout << "<< backup deleted >>" << endl;
+            return root;
+        }
+
+
         if (command.find("backup") != -1) {
             //create a memento of the file system
-            originator.setState(*root);
+            originator.setState(root);
             originator.storeState(caretaker);
             root->listItems(0, true);
             cout << "<< backup captured >>" << endl;
@@ -32,10 +41,18 @@ Directory* cmd(string command, Directory *dir, Navigator& nav, Directory* root, 
 
         if (command.find("restore") != -1) {
             //restore the memento of the file system
-            originator.getState()->listItems(0, true);
-            originator.reinstantiateMemento(caretaker.retrieveMemento());
-            cout << "<< backup restored >>" << endl;
-            return originator.getState();
+
+            if (caretaker.retrieveMemento() != nullptr && originator.reinstantiateMemento(caretaker.retrieveMemento())) {
+                if (originator.getState() != nullptr)
+                    originator.getState()->listItems(0, true);
+                cout << "<< backup restored >>" << endl;
+                return originator.getState();
+            }
+
+            //backup not found
+            cout << "<< no backup found >>" << endl;
+
+            return root;
         }
 
         if (command.find("touch ") != -1) { //make a file
@@ -136,11 +153,35 @@ Directory* cmd(string command, Directory *dir, Navigator& nav, Directory* root, 
 
 int main() {
 
-    //TODO: create a snapshot file system (backup memento for root node)
+    Root root;
 
-    //to backup
+    root.addFile(new File("Hello", "yooo"));
+    root.addFile(new File("Bye", "bloop"));
 
-    BackupOriginator originator;
+    root.backup();
+
+    cout << "State:" << endl;
+
+    root.listItems(0, true);
+
+    cout << "Deleting a file...." << endl;
+
+    root.removeFile("Hello");
+
+    cout << "State:" << endl;
+
+    root.listItems(0, true);
+
+    cout << "Restoring..." << endl;
+
+    root.restore();
+
+    cout << "State:" << endl;
+
+    root.listItems(0, true);
+
+
+    /*BackupOriginator originator;
     BackupCaretaker caretaker;
 
     //to navigate
@@ -171,35 +212,11 @@ int main() {
         }
 
         if (currentCommand.find("restore") != -1) {
-            cout << "trying to restore..." << endl;
             root = cmd(currentCommand, currentFile, navigatorMemento, root, originator, caretaker);
             currentFile = root;
         }
         else
             currentFile = cmd(currentCommand, currentFile, navigatorMemento, root, originator, caretaker);
-    }
-
-
-
-    /*root.addFile(new File("dog.docx", "story of a good dog"));
-
-    root.addFile(new File("boy.docx", "story of a boy"));
-
-    Directory* dir2 = new Directory("Photos", false);
-    dir2->addFile(new File("lion.jpg", "a photo of a lion"));
-    root.addDirectory(dir2);
-    dir2->addDirectory(new Directory("Sync Directory", true));
-
-    Directory* sf1 = new Directory("SFolder", true);
-    sf1->addFile(new File("SyncProg.exe", "0011000110"));
-
-    root.addDirectory(sf1);
-
-    root.addFile(new File("bird.txt", "photo of a bird"));
-    root.listItems(0);*/
-
-
-
-    return 0;
+    }*/
 
 }

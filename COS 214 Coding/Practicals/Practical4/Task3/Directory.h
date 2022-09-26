@@ -7,7 +7,7 @@
 #include <string>
 
 class Directory : public Node {
-private:
+protected:
     std::list<Node*> items;
     bool synchronous;
 public:

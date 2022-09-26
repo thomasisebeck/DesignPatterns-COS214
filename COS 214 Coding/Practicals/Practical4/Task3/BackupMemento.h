@@ -8,12 +8,16 @@ class BackupOriginator;
 class BackupMemento {
 private:
     friend class BackupOriginator;
+    friend class Root; //origninator
     Directory* state;
 
     //set state in constructor
     BackupMemento(Directory* newState) { this->state = newState; }
-    Directory* getState() { return state; }
+
 public:
+    //make private!!!!
+    Directory* getState() { return state; }
+
     virtual ~BackupMemento() {
         delete state;
         state = nullptr;

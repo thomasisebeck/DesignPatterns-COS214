@@ -8,15 +8,31 @@ class BackupOriginator {
 private:
     Directory* state;
 public:
-    void reinstantiateMemento(BackupMemento* memento) {
-        state = memento->getState();
-    }
-    BackupMemento* createMemento() {
-        return new BackupMemento(state);
-    }
+    BackupOriginator() { state = nullptr; }
+    BackupMemento* getMemento() { return new BackupMemento(state); }
     Directory* getState() { return state; }
-    void setState(Directory newState) { this->state = new Directory(newState); }
-    void storeState(BackupCaretaker& care) { care.storeMemento(new BackupMemento(state)); }
+    void setState(Directory* newState) { state = new Directory(*newState); }
+    ~BackupOriginator() { delete state; }
+
+    void storeState(BackupCaretaker& care) {
+        care.storeMemento(new BackupMemento(state));
+    }
+    bool reinstantiateMemento(BackupMemento* memento) {
+        memento->getState()->listItems(0, true);
+
+        if (memento->getState() == nullptr)
+            return false;
+
+        Directory* temp = memento->getState();
+
+        if (temp != nullptr) {
+            state = new Directory(*memento->getState());
+            return true;
+        }
+
+        return false;
+    }
+
 };
 
 #endif

@@ -6,10 +6,13 @@ class BackupCaretaker {
 private:
     BackupMemento* mem;
 public:
-    void storeMemento(BackupMemento* mem) {
-        this->mem = mem;
+    BackupCaretaker() { this->mem = nullptr;  }
+    void storeMemento(BackupMemento* mem) { this->mem = mem; }
+    BackupMemento* retrieveMemento() {  return this->mem;  }
+    void deleteMemento() {
+        delete this->mem;
+        this->mem = nullptr;
     }
-    BackupMemento* retrieveMemento() { return this->mem; }
     ~BackupCaretaker() { delete this->mem; }
 };
 
