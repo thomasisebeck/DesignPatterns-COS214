@@ -9,6 +9,7 @@ private:
     std::list<Node*> items;
     bool synchronous;
 public:
+    friend class Observer;
 	Directory(std:: string name, bool synchronous);
 	bool addItem(Node* item);
 	bool removeItem(std::string name);

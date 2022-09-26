@@ -7,6 +7,7 @@
 #include "BackupCaretaker.h"
 #include "BackupMemento.h"
 #include "Root.h"
+#include "ConcreteObserver.h"
 using namespace std;
 
 int validate(string input, int lower, int upper) {
@@ -21,6 +22,11 @@ int validate(string input, int lower, int upper) {
 Directory* cmd(string command, Directory *dir, Navigator& nav, Directory* root, BackupOriginator& originator, BackupCaretaker& caretaker) {
 
     while (true) {
+
+        if (command.find("virus notify") != -1) {
+            ConcreteObserver* newObserver = new ConcreteObserver(root);
+            root->attach(newObserver);
+        }
 
         if (command.find("delback") != -1) {
             caretaker.deleteMemento();
@@ -153,7 +159,7 @@ Directory* cmd(string command, Directory *dir, Navigator& nav, Directory* root, 
 
 int main() {
 
-    Root root;
+    /*Root root;
 
     root.addFile(new File("Hello", "yooo"));
     root.addFile(new File("Bye", "bloop"));
@@ -172,7 +178,7 @@ int main() {
 
     root.listItems(0, true);
 
-    cout << "Restoring..." << endl;
+    cout << "Restoring..." << endl;*/
 
   /*  root.restore();
 
@@ -181,7 +187,8 @@ int main() {
     root.listItems(0, true);*/
 
 
-    /*BackupOriginator originator;
+
+    BackupOriginator originator;
     BackupCaretaker caretaker;
 
     //to navigate

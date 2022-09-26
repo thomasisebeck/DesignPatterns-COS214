@@ -3,13 +3,16 @@
 #include "Node.h"
 #include "File.h"
 #include "NodeIterator.h"
+#include "ConcreteObserver.h"
 #include <list>
 #include <string>
 
 class Directory : public Node {
-protected:
+    friend class ConcreteObserver;
+private:
     std::list<Node*> items;
     bool synchronous;
+    ConcreteObserver* virusScanner;
 public:
 	Directory(std:: string name, bool synchronous);
     Directory(Directory& old);
@@ -30,6 +33,9 @@ public:
     int getIndex(std::string name);
     virtual std::string getContents();
     virtual bool isSynchronous() { return synchronous; }
+
+    //Observer
+    void attach(ConcreteObserver* observer);
 };
 
 #endif
