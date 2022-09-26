@@ -5,8 +5,6 @@
 #include <list>
 using namespace std;
 
-class Directory;
-
 class NodeIterator {
     friend class Directory;
 public:

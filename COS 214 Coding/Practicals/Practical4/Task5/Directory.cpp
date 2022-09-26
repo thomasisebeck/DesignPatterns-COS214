@@ -7,7 +7,7 @@ using namespace std;
 
 Directory::Directory(string name, bool synchronous) : Node(name, true) {
     this->synchronous = synchronous;
-    this->virusScanner = nullptr;
+    this->virusscanner = nullptr;
 }
 
 //copy constructor
@@ -33,7 +33,7 @@ Directory::~Directory() {
     for (iter = items.begin(); iter != items.end(); iter++)
         delete (*iter);
 
-    delete virusScanner;
+    delete virusscanner;
 }
 
 // --------------- UTILITIES --------------//
@@ -100,8 +100,10 @@ void Directory::addFile(File* file) {
     this->items.push_back(file);
 
     //Notify the observer
-    if (virusScanner != nullptr)
-        virusScanner->update();
+    if (virusscanner != nullptr) {
+        cout << "telling scanner..." << endl;
+        virusscanner->update(&this->items);
+    }
 }
 
 bool Directory::removeItem(string name) {
@@ -192,8 +194,4 @@ bool Directory::listDirectories() {
         it++;
     }
     return false;
-}
-
-void Directory::attach(ConcreteObserver* observer) {
-    this->virusScanner = observer;
 }

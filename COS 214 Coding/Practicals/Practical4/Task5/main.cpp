@@ -23,9 +23,10 @@ Directory* cmd(string command, Directory *dir, Navigator& nav, Directory* root, 
 
     while (true) {
 
-        if (command.find("virus notify") != -1) {
-            ConcreteObserver* newObserver = new ConcreteObserver(root);
+        if (command.find("antivirus") != -1) {
+            ConcreteObserver* newObserver = new ConcreteObserver;
             root->attach(newObserver);
+            return root;
         }
 
         if (command.find("delback") != -1) {
@@ -224,6 +225,6 @@ int main() {
         }
         else
             currentFile = cmd(currentCommand, currentFile, navigatorMemento, root, originator, caretaker);
-    }*/
+    }
 
 }
