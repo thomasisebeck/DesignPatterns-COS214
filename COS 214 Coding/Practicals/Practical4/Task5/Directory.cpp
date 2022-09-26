@@ -100,10 +100,9 @@ void Directory::addFile(File* file) {
     this->items.push_back(file);
 
     //Notify the observer
-    if (virusscanner != nullptr) {
-        cout << "telling scanner..." << endl;
+    if (virusscanner != nullptr)
         virusscanner->update(&this->items);
-    }
+
 }
 
 bool Directory::removeItem(string name) {

@@ -33,7 +33,20 @@ public:
     int getIndex(std::string name);
     virtual std::string getContents();
     virtual bool isSynchronous() { return synchronous; }
-    void attach(ConcreteObserver* newObserver) { virusscanner = newObserver; }
+    void attach(ConcreteObserver* newObserver) {
+        //attach myself
+        virusscanner = newObserver;
+
+        //attach my children
+        std::list<Node*>::iterator it;
+        for (it = items.begin(); it != items.end(); it++) {
+            if ((*it)->isDirectory()) {
+                dynamic_cast<Directory*>((*it))->attach(newObserver);
+            }
+
+        }
+
+    }
 
 };
 
