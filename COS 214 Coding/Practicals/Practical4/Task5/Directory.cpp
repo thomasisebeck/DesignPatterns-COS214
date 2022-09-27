@@ -1,7 +1,7 @@
 #include "Directory.h"
 #include <iostream>
 #include <cstdio>
-//#include "Windows.h"
+#include "Windows.h"
 
 using namespace std;
 
@@ -137,8 +137,8 @@ std::string Directory::getContents(){
 
 void Directory::listItems(int indent, bool listAll) {
 
-    //soleOutputCP(CP_UTF8);
-    //setvbuf(stdout, nullptr, _IOFBF, 1000);
+    SetConsoleOutputCP(CP_UTF8);
+    setvbuf(stdout, nullptr, _IOFBF, 1000);
 
 
     for (int i = 0; i < indent; i++)

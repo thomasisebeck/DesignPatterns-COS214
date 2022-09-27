@@ -47,6 +47,7 @@ public:
         }
 
     }
+    std::list<Node*>* getState() { return &items; }
 
 };
 
