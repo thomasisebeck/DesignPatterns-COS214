@@ -1,18 +1,18 @@
 ﻿main:
-	g++ -c -g MyVisitor2.cpp
-	g++ -o MyVisitor2 MyVisitor2.o
+	g++ -c -g HouseBuilder.cpp
+	g++ -o HouseBuilder HouseBuilder.o
 
 r: main
-	./main
+	./HouseBuilder
 
 c:
-	rm MyVisitor2.o MyVisitor2 main
+	rm HouseBuilder.o HouseBuilder
 
 u:
-	rm MyVisitor2.o MyVisitor2
-	g++ -c -g MyVisitor2.cpp
-	g++ -o MyVisitor2 MyVisitor2.o
-	./MyVisitor2
+	rm HouseBuilder.o HouseBuilder
+	g++ -c -g HouseBuilder.cpp
+	g++ -o HouseBuilder HouseBuilder.o
+	./HouseBuilder
 
 val:
-	valgrind --leak-check=full ./MyVisitor2
+	valgrind --leak-check=full ./HouseBuilder
